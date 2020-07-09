@@ -17,6 +17,12 @@ const userSchema = new Schema({
         required : true,
         trim : true,
     },
+    codeforcesUserId : {
+        type : String,
+        default : '',  
+        required : true,
+        trim : true,
+    },
     password : {
         type : String,
         required : true,

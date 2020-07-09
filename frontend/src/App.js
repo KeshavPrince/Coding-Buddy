@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './App.css'
 import Signin from "./components/signin";
 import Signup from "./components/signup";
@@ -7,8 +7,14 @@ import { Route, BrowserRouter } from "react-router-dom";
 
 function App(){
   return (
-    <div className="overlay">
-      <div class="card-panel teal lighten-2">Wolf</div>
+    <div>
+      <BrowserRouter>
+        <div className="App">
+          <Route exact path="/" component={Home} />
+          <Route path="/authenticate/signup" component={Signup} />
+          <Route path="/authenticate/signin" component={Signin} />
+        </div>
+      </BrowserRouter>
     </div>
   );
 }

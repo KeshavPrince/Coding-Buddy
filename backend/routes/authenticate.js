@@ -1,5 +1,6 @@
 const user = require("../models/user.model");
 const userSession = require("../models/userSession.model");
+const fetch = require("node-fetch");
 
 module.exports = (app) => {
   function ValidateEmail(mail) {
@@ -17,6 +18,14 @@ module.exports = (app) => {
         success: !true,
         message: "email is required",
       });
+    } else if (
+      req.body.codeforcesUserId == null ||
+      req.body.codeforcesUserId == ""
+    ) {
+      res.send({
+        success: !true,
+        message: "codeforces UserId is required",
+      });
     } else if (ValidateEmail(req.body.email) == false) {
       res.send({
         success: !true,
@@ -28,72 +37,86 @@ module.exports = (app) => {
         message: "password is required",
       });
     } else {
-      user.find(
-        {
-          email: req.body.email.toLowerCase(),
-        },
-        (err, foundUser) => {
-          if (err) {
+      let query = "http://codeforces.com/api/user.info?handles=" + req.body.codeforcesUserId;
+      fetch(query)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          if (data.status !== "OK") {
             res.send({
               success: !true,
-              message: "Server error..",
-            });
-          } else if (foundUser.length > 0) {
-            res.send({
-              success: !true,
-              message: "Email already have account",
+              message: "Codeforces User Id is InValid",
             });
           } else {
-            var newUser = new user();
-            newUser.email = req.body.email.toLowerCase();
-            newUser.name = req.body.name;
-            newUser.password = newUser.genrateHash(req.body.password);
-            newUser.save((err, userCreated) => {
-              if (err) {
-                res.send({
-                  success: !true,
-                  message: "Server error..",
-                });
-              } else {
-                userSession.find(
-                  {
-                    userSessionId: userCreated._id,
-                  },
-                  (err, result) => {
+            user.find(
+              {
+                email: req.body.email.toLowerCase(),
+              },
+              (err, foundUser) => {
+                if (err) {
+                  res.send({
+                    success: !true,
+                    message: "Server error..",
+                  });
+                } else if (foundUser.length > 0) {
+                  res.send({
+                    success: !true,
+                    message: "Email already have account",
+                  });
+                } else {
+                  var newUser = new user();
+                  newUser.email = req.body.email.toLowerCase();
+                  newUser.name = req.body.name;
+                  newUser.codeforcesUserId = req.body.codeforcesUserId;
+                  newUser.password = newUser.genrateHash(req.body.password);
+                  newUser.save((err, userCreated) => {
                     if (err) {
                       res.send({
-                        success: false,
+                        success: !true,
                         message: "Server error..",
                       });
-                    } else if (result.length > 0) {
-                      res.send({
-                        success: false,
-                        message: "Already Loged in",
-                      });
                     } else {
-                      var newUserSession = new userSession();
-                      newUserSession.userSessionId = userCreated._id;
-                      newUserSession.save((errr, docs) => {
-                        if (errr) {
-                          res.send({
-                            success: false,
-                            message: "Server error..",
-                          });
+                      userSession.find(
+                        {
+                          userSessionId: userCreated._id,
+                        },
+                        (err, result) => {
+                          if (err) {
+                            res.send({
+                              success: false,
+                              message: "Server error..",
+                            });
+                          } else if (result.length > 0) {
+                            res.send({
+                              success: false,
+                              message: "Already Loged in",
+                            });
+                          } else {
+                            var newUserSession = new userSession();
+                            newUserSession.userSessionId = userCreated._id;
+                            newUserSession.save((errr, docs) => {
+                              if (errr) {
+                                res.send({
+                                  success: false,
+                                  message: "Server error..",
+                                });
+                              }
+                              res.send({
+                                success: true,
+                                message: "Account Created..",
+                                token: docs._id,
+                              });
+                            });
+                          }
                         }
-                        res.send({
-                          success: true,
-                          message: "Account Created..",
-                          token: docs._id,
-                        });
-                      });
+                      );
                     }
-                  }
-                );
+                  });
+                }
               }
-            });
+            );
           }
-        }
-      );
+        });
     }
   });
 
