@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 const app = express();
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 3000;
 const uri = process.env.ATLAS_URI;
 
 mongoose.connect(uri, {useNewUrlParser : true, useCreateIndex :true, useUnifiedTopology : true});
@@ -23,6 +23,9 @@ connection.once('open', () => {
 app.use(cors());
 
 app.use(express.json());
+
+
+require('./routes/authenticate.js')(app);
 
 app.listen(port, () => {
     console.log('Wolf Listening to You..');
