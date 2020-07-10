@@ -24,12 +24,14 @@ export default function SignUp() {
           password: password,
         }),
       };
-      console.log(setEmail);
       let res = await signUp(requestOptions);
-      console.log(res);
-      if(res)
+      if(res.status)
       {
         setReDirectHome("/");
+      }
+      else
+      {
+        alert(res.comment);
       }
     };
   
@@ -66,11 +68,11 @@ export default function SignUp() {
           <label htmlFor="codeforcesUserId">Codeforces UserId</label>
           </div>
           <div className="input-field">
-          <input id="password" type="text" className="validate" onChange={handleChangePassword}/>
+          <input id="password" type="password" className="validate" onChange={handleChangePassword}/>
           <label htmlFor="password">Password</label>
           </div>
           <br></br>
-          <button className="btn waves-effect waves-light" type="submit" name="action">Submit
+          <button className="btn waves-effect waves-light" type="submit" name="action">Sign Up
           </button>
           </form>
         </div>

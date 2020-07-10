@@ -11,7 +11,6 @@ export default function Signin() {
   
     const handleSubmit = async (e) => {
       e.preventDefault();
-      console.log('wolf');
       const requestOptions = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -20,11 +19,13 @@ export default function Signin() {
           password: password,
         }),
       };
-  
       let res = await signIn(requestOptions);
-      console.log(res);
-      if (res) {
+      if (res.status) {
         setReDirectHome("/");
+      }
+      else
+      {
+        alert(res.comment);
       }
     };
   
@@ -39,8 +40,21 @@ export default function Signin() {
       return <Redirect to={redirectHome} />;
     } else {
       return (
-        <div>
-            Signin
+        <div className="center container grey lighten-3">
+          <h2 className="blue-text">Sign In</h2>
+          <form onSubmit={handleSubmit} noValidate>
+          <div className="input-field">
+          <input id="email" type="text" className="validate" onChange={handleChangeEmail}/>
+          <label htmlFor="email">Email</label>
+          </div>
+          <div className="input-field">
+          <input id="password" type="password" className="validate" onChange={handleChangePassword}/>
+          <label htmlFor="password">Password</label>
+          </div>
+          <br></br>
+          <button className="btn waves-effect waves-light" type="submit" name="action">Sign In
+          </button>
+          </form>
         </div>
       );
     }
