@@ -77,7 +77,18 @@ export default function Home() {
     );
   } else {
     return <div>
-      
+      <div className="row"> 
+        <div className="col s4">
+          <div className="newcontainer blue">
+          
+          </div>
+        </div>
+        <div className="col s8">
+          <div className="newcontainer red">
+            
+          </div>
+        </div>
+      </div>
     </div>;
   }
 }

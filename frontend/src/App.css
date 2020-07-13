@@ -2568,6 +2568,9 @@ table span.badge {
   padding-right: 100px;
   width: 50%;
 }
+
+.newcontainer{height: 100vh;}
+
 @media only screen and (min-width: 601px) {
   .container {
     width: 85%;
@@ -2609,7 +2612,7 @@ table span.badge {
   float: left;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  padding: 0 0.75rem;
+  /* padding: 0 0.75rem; */
   min-height: 1px;
 }
 .row .col[class*="push-"],
