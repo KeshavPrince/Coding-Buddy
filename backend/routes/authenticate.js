@@ -105,6 +105,7 @@ module.exports = (app) => {
                                 success: true,
                                 message: "Account Created..",
                                 token: docs._id,
+                                userId : userCreated._id,
                               });
                             });
                           }
@@ -226,7 +227,6 @@ module.exports = (app) => {
   });
 
   app.get("/api/authenticate/verify", (req, res) => {
-    console.log("kp");
     const { query } = req;
     const { token } = query;
     userSession.find(

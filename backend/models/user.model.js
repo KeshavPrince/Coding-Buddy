@@ -27,6 +27,10 @@ const userSchema = new Schema({
         type : String,
         required : true,
         trim : false,
+    },
+    groups : {
+        type : [String],
+        required : false,
     }
 }, {
     timestamp : true,

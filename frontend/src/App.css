@@ -2570,6 +2570,11 @@ table span.badge {
 }
 
 .newcontainer{height: 100vh;}
+.margin-10{
+  margin-top: 10px;
+  margin-left: 50px;
+  margin-bottom: 10px;
+}
 
 @media only screen and (min-width: 601px) {
   .container {

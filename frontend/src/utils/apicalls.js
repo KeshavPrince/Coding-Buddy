@@ -20,6 +20,26 @@ export function verifyToken(token) {
   });
 }
 
+export function getGroups(userId) {
+  return new Promise((resolve, reject) => {
+  fetch("http://localhost:4000/api/user/find_groups?userid=" + userId)
+    .then((res) => res.json())
+    .then((json) => {
+      console.log(json);
+      if(json.success) {
+        resolve({status : true, groupList : json.result});
+      } else {
+        reject('error');
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      reject('error');
+    }
+  );
+  });
+}
+
 export function signUp(details) {
   return new Promise((resolve, reject) => {
     fetch("http://localhost:4000/api/authenticate/signup", details)
@@ -27,6 +47,7 @@ export function signUp(details) {
       .then((json) => {
         if (json.success) {
           setInStorage('Coding-Buddy_token', json.token);
+          setInStorage('Coding-Buddy_userId', json.userId);
           resolve({status : true});
         } else {
           resolve({status : false, comment : json.message});

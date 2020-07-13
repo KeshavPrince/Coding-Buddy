@@ -26,6 +26,7 @@ app.use(express.json());
 
 
 require('./routes/authenticate.js')(app);
+require('./routes/user.js')(app);
 
 app.listen(port, () => {
     console.log('Wolf Listening to You..');

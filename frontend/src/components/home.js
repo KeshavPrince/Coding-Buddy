@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import { getFromStorage } from "../utils/storage";
 import { verifyToken } from "../utils/apicalls";
 import { Redirect } from "react-router-dom";
+import GroupList from "./grouplist";
 
 export default function Home() {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [redirectSignIn, setReDirectSignIn] = useState("");
   const [redirectSignInBool, setReDirectSignInBool] = useState(false);
+  const [userId, setUserId] = useState("");
 
   const init = async () => {
     let value = getFromStorage("Coding-Buddy_token");
@@ -17,8 +19,8 @@ export default function Home() {
       res = await verifyToken(value).catch((err) => (res = false));
       console.log(res);
       if (res) {
-        console.log('wolfie');
         setIsSignedIn(true);
+        setUserId(getFromStorage("Coding-Buddy_userId"));
         setIsLoading(false);
       } else {
         setIsLoading(false);
@@ -78,12 +80,12 @@ export default function Home() {
   } else {
     return <div>
       <div className="row"> 
-        <div className="col s4">
+        <div className="col s3">
           <div className="newcontainer blue">
-          
+          <GroupList userId = {userId}/>
           </div>
         </div>
-        <div className="col s8">
+        <div className="col s9">
           <div className="newcontainer red">
             
           </div>
