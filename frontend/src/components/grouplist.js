@@ -1,5 +1,6 @@
 import React, { useState, useEffect }  from "react";
 import { addToRandomGroup } from "../utils/apicalls";
+import { getFromStorage } from "../utils/storage";
 
 export default function GroupList({userId}) {
 
@@ -12,7 +13,7 @@ export default function GroupList({userId}) {
     }, []);
 
     const joinRandomGroup = (e) => {
-        
+        addToRandomGroup(getFromStorage('Coding-Buddy_userId'));
     }
 
     if(groups.length == 0) {

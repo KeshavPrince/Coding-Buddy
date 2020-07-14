@@ -1,12 +1,10 @@
 import { setInStorage } from "./storage";
-import JoinGroup from "../../../backend/routes/JoinGroup";
 
 export function verifyToken(token) {
   return new Promise((resolve, reject) => {
     fetch("http://localhost:4000/api/authenticate/verify?token=" + token)
       .then((res) => res.json())
       .then((json) => {
-        console.log(json);
         if (json.success) {
           resolve(true);
         } else {
@@ -20,7 +18,7 @@ export function verifyToken(token) {
   });
 }
 
-function JoinGroup(userId, groupId) {
+function joinGroup(userId, groupId, groupName) {
   return new Promise((resolve, reject) => {
     const requestOptions = {
       method: "POST",
@@ -28,9 +26,10 @@ function JoinGroup(userId, groupId) {
       body: JSON.stringify({
         userId: userId,
         groupId: groupId,
+        groupName : groupName,
       }),
     };
-    fetch("http://localhost:4000/api/user/joinGroup", requestOptions)
+    fetch("http://localhost:4000/api/user/joingroup", requestOptions)
       .then((res) => res.json())
       .then((json) => {
         if (json.success) {
@@ -47,11 +46,11 @@ function JoinGroup(userId, groupId) {
 
 export function addToRandomGroup(userId) {
   return new Promise((resolve, reject) => {
-    fetch("http://localhost:4000/api/joinGroup/random?userid=" + userId)
+    fetch("http://localhost:4000/api/joingroup/random?userid=" + userId)
       .then((res) => res.json())
       .then((json) => {
         if (json.status) {
-          JoinGroup(userId, json.groupId).then((res) => {
+          joinGroup(userId, json.groupId, json.groupName).then((res) => {
             if (res) {
               resolve({ status: true });
             } else {
@@ -71,11 +70,11 @@ export function addToRandomGroup(userId) {
 
 export function addToCustomGroup(userId) {
   return new Promise((resolve, reject) => {
-    fetch("http://localhost:4000/api/joinGroup/custom?userid=" + userId)
+    fetch("http://localhost:4000/api/joingroup/custom?userid=" + userId)
       .then((res) => res.json())
       .then((json) => {
         if (json.status) {
-          JoinGroup(userId, json.groupId).then((res) => {
+          joinGroup(userId, json.groupId).then((res) => {
             if (res) {
               resolve({ status: true });
             } else {

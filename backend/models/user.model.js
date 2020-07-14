@@ -29,7 +29,14 @@ const userSchema = new Schema({
         trim : false,
     },
     groups : {
-        type : [String],
+        type : [{
+            name : {
+                type : String,
+            },
+            id : {
+                type : String,
+            }
+        }],
         required : false,
     }
 }, {
