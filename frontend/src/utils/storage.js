@@ -1,5 +1,4 @@
 export function getFromStorage(key) {
-    console.log(key);
     if(!key) {
         return null;
     }

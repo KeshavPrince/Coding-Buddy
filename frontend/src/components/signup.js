@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { signUp } from "../utils/apicalls";
 import { useState } from "react";
 import { Redirect } from "react-router-dom";

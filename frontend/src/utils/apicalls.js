@@ -21,7 +21,7 @@ export function verifyToken(token) {
 function joinGroup(userId, groupId, groupName) {
   return new Promise((resolve, reject) => {
     const requestOptions = {
-      method: "POST",
+      method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         userId: userId,
@@ -32,7 +32,7 @@ function joinGroup(userId, groupId, groupName) {
     fetch("http://localhost:4000/api/user/joingroup", requestOptions)
       .then((res) => res.json())
       .then((json) => {
-        if (json.success) {
+        if (json.status) {
           resolve(true);
         } else {
           reject(false);
@@ -44,15 +44,18 @@ function joinGroup(userId, groupId, groupName) {
   });
 }
 
+
 export function addToRandomGroup(userId) {
   return new Promise((resolve, reject) => {
     fetch("http://localhost:4000/api/joingroup/random?userid=" + userId)
       .then((res) => res.json())
       .then((json) => {
         if (json.status) {
+          console.log(json);
           joinGroup(userId, json.groupId, json.groupName).then((res) => {
             if (res) {
-              resolve({ status: true });
+              console.log('won');
+              resolve({ status: true, groupId : json.groupId, groupName : json.groupName });
             } else {
               reject({ status: false });
             }
@@ -68,15 +71,32 @@ export function addToRandomGroup(userId) {
   });
 }
 
+export function fetchUserData(userId) {
+  return new Promise((resolve, reject) => {
+    fetch("http://localhost:4000/api/user/details?userid=" + userId)
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.status) {
+              resolve({ status: true, data : json.data});
+            } else {
+              reject({ status: false });
+            }
+          })
+      .catch((err) => {
+        reject("error");
+      });
+  });
+}
+
 export function addToCustomGroup(userId) {
   return new Promise((resolve, reject) => {
     fetch("http://localhost:4000/api/joingroup/custom?userid=" + userId)
       .then((res) => res.json())
       .then((json) => {
         if (json.status) {
-          joinGroup(userId, json.groupId).then((res) => {
+          joinGroup(userId, json.groupId, json.groupName).then((res) => {
             if (res) {
-              resolve({ status: true });
+              resolve({ status: true, groupId : json.groupId, groupName : json.groupName});
             } else {
               reject({ status: false });
             }

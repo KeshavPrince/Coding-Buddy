@@ -15,9 +15,7 @@ export default function Home() {
     let value = getFromStorage("Coding-Buddy_token");
     if (value) {
       let res = false;
-      console.log(value);
       res = await verifyToken(value).catch((err) => (res = false));
-      console.log(res);
       if (res) {
         setIsSignedIn(true);
         setUserId(getFromStorage("Coding-Buddy_userId"));

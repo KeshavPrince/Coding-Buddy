@@ -1,22 +1,29 @@
 import React, { useState, useEffect }  from "react";
 import { addToRandomGroup } from "../utils/apicalls";
-import { getFromStorage } from "../utils/storage";
+import { fetchUserData } from "../utils/apicalls";
 
 export default function GroupList({userId}) {
 
     const [groups, setGroups] = useState([]);
 
-    useEffect(() => {
-
-       // fetch groups
-       
+    useEffect(async () => {
+        let res = await fetchUserData(userId);
+        if(res.status) {
+            setGroups([res.data.groups]);
+        }
     }, []);
 
-    const joinRandomGroup = (e) => {
-        addToRandomGroup(getFromStorage('Coding-Buddy_userId'));
+    const joinRandomGroup = async (e) => {
+        let entry = await addToRandomGroup(userId);
+        if(entry.status) {
+            setGroups([...groups, {groupId : entry.groupId, groupName : entry.groupName}])
+        }
+        else {
+            alert('Opertion is not Successful');
+        }
     }
 
-    if(groups.length == 0) {
+    if(groups.length === 0) {
         return (
             <div>
             <div className = "grey">
@@ -40,6 +47,7 @@ export default function GroupList({userId}) {
     else {
         return (
             <div>
+                <div>Wolf</div>
                 <a class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a>
             </div>
         );
