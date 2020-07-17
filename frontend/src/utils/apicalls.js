@@ -18,7 +18,7 @@ export function verifyToken(token) {
   });
 }
 
-function joinGroup(userId, groupId, groupName) {
+function joinGroup(userId, groupId, groupName, groupAvatar) {
   return new Promise((resolve, reject) => {
     const requestOptions = {
       method: "PUT",
@@ -27,6 +27,7 @@ function joinGroup(userId, groupId, groupName) {
         userId: userId,
         groupId: groupId,
         groupName : groupName,
+        groupAvatar: groupAvatar,
       }),
     };
     fetch("http://localhost:4000/api/user/joingroup", requestOptions)
@@ -52,10 +53,34 @@ export function addToRandomGroup(userId) {
       .then((json) => {
         if (json.status) {
           console.log(json);
-          joinGroup(userId, json.groupId, json.groupName).then((res) => {
+          joinGroup(userId, json.groupId, json.groupName, json.groupAvatar).then((res) => {
             if (res) {
-              console.log('won');
-              resolve({ status: true, groupId : json.groupId, groupName : json.groupName });
+              resolve({ status: true, groupId : json.groupId, groupName : json.groupName,  groupAvatar : json.groupAvatar});
+            } else {
+              reject({ status: false });
+            }
+          });
+        } else {
+          reject({ status: false });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        reject("error");
+      });
+  });
+}
+
+export function addToCustomGroup(userId) {
+  return new Promise((resolve, reject) => {
+    fetch("http://localhost:4000/api/joingroup/custom?userid=" + userId)
+      .then((res) => res.json())
+      .then((json) => {
+        console.log(json);
+        if (json.status) {
+          joinGroup(userId, json.groupId, json.groupName, json.groupAvatar).then((res) => {
+            if (res) {
+              resolve({ status: true, groupId : json.groupId, groupName : json.groupName, groupAvatar : json.groupAvatar});
             } else {
               reject({ status: false });
             }
@@ -83,30 +108,6 @@ export function fetchUserData(userId) {
             }
           })
       .catch((err) => {
-        reject("error");
-      });
-  });
-}
-
-export function addToCustomGroup(userId) {
-  return new Promise((resolve, reject) => {
-    fetch("http://localhost:4000/api/joingroup/custom?userid=" + userId)
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.status) {
-          joinGroup(userId, json.groupId, json.groupName).then((res) => {
-            if (res) {
-              resolve({ status: true, groupId : json.groupId, groupName : json.groupName});
-            } else {
-              reject({ status: false });
-            }
-          });
-        } else {
-          reject({ status: false });
-        }
-      })
-      .catch((err) => {
-        console.log(err);
         reject("error");
       });
   });

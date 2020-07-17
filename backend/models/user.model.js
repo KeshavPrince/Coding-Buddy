@@ -35,6 +35,9 @@ const userSchema = new Schema({
             },
             id : {
                 type : String,
+            },
+            avatar : {
+                type : String,
             }
         }],
         required : false,

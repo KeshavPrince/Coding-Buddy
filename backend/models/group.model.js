@@ -25,6 +25,10 @@ const groupSchema = new Schema({
         type : Boolean,
         default: true,
         required : false,
+    },
+    avatar : {
+        type : String,
+        required : false,
     }
 }, {
     timestamp : true,

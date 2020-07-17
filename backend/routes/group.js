@@ -10,11 +10,23 @@ module.exports = (app) => {
     "Avengers Debug",
     "Compiling League"
   ];
+  let chooseAvatar = [
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSdozOeDo1rlphHQbzWVXeDNCCePYAoEKhpsQ&usqp=CAU",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTo5Cw94w-oBFZrUbbKho_adUYKFR9tKwsziA&usqp=CAU",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSY2PWrq5kSr7Y1dwsVu1joubdXABcAXVWPKw&usqp=CAU",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQZsYeo4gNbZoVroQkgft-kcaGPcOnDpTJV7w&usqp=CAU",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcS6mnetSzxGcCgKJMMUOeOUNmFI8BLFBKGt-w&usqp=CAU",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQZ-wyVEGxk1hig_t9xExxRXuay0sDhckjYEw&usqp=CAU",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTTxKvr4YkeGFyY_dlx6ES4Cg2I5NaoaTgRnQ&usqp=CAU",
+  ];
+
   function createGroup(userid, type) {
     return new Promise((resolve, reject) => {
       var newGroup = group();
       newGroup.name = chooseName[Math.floor(Math.random() * 7)];
       newGroup.groupType = type;
+      let idx = Math.floor(Math.random() * 7);
+      newGroup.avatar = chooseAvatar[idx];
       newGroup.members = [userid];
       newGroup.save((err, groupCreated) => {
         if (err) {
@@ -24,11 +36,13 @@ module.exports = (app) => {
             status: true,
             groupId: groupCreated._id,
             groupName: groupCreated.name,
+            groupAvatar : groupCreated.avatar,
           });
         }
       });
     });
   }
+
   app.get("/api/joingroup/random", (req, res) => {
     const { query } = req;
     const { userid } = query;
@@ -50,6 +64,7 @@ module.exports = (app) => {
                 status: true,
                 groupId: data.groupId,
                 groupName: data.groupName,
+                groupAvatar: data.groupAvatar,
               });
             } else {
               res.send({ status: false, comment: "error in creating group" });
@@ -75,6 +90,7 @@ module.exports = (app) => {
                     status: true,
                     groupId: result[0]._id,
                     groupName: result[0].name,
+                    groupAvatar : result[0].avatar,
                   });
                 }
               });
@@ -88,15 +104,17 @@ module.exports = (app) => {
   app.get("/api/joingroup/custom", (req, res) => {
     const { query } = req;
     const { userid } = query;
-    let result = createGroup(userid, "custom");
-    if (result.status) {
-      res.send({
-        status: true,
-        groupId: result.groupId,
-        groupName: result.groupName,
-      });
-    } else {
-      res.send({ status: false, comment: "error in creating group" });
-    }
+    createGroup(userid, "custom").then( (result) => {
+      if (result.status) {
+        res.send({
+          status: true,
+          groupId: result.groupId,
+          groupName: result.groupName,
+          groupAvatar : result.groupAvatar,
+        });
+      } else {
+        res.send({ status: false, comment: "error in creating group" });
+      }
+    });
   });
 };

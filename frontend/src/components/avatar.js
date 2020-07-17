@@ -1,10 +1,10 @@
 import React from 'react'
 
-export default function Avatar({ user, showName }) {
+export default function Avatar({ group, showName }) {
     return (
         <div className="avatar-component">
-            <img className="avatar" src={user.avatar} alt="" />
-            {showName && <h3 className="avatar-title">{user.name}</h3>}
+            <img className="avatar" src={group.avatar} alt="" />
+            {showName && <h3 className="avatar-title">{group.name}</h3>}
         </div>
     )
 }
