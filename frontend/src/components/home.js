@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { getFromStorage } from "../utils/storage";
 import { verifyToken } from "../utils/apicalls";
 import { Redirect } from "react-router-dom";
-import GroupList from "./grouplist";
+import Avatar from './avatar'
+import { fetchUserData } from "../utils/apicalls";
 
 export default function Home() {
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -10,8 +11,9 @@ export default function Home() {
   const [redirectSignIn, setReDirectSignIn] = useState("");
   const [redirectSignInBool, setReDirectSignInBool] = useState(false);
   const [userId, setUserId] = useState("");
-
+  const [mainUser, setMainUser] = useState("");
   const init = async () => {
+
     let value = getFromStorage("Coding-Buddy_token");
     if (value) {
       let res = false;
@@ -19,17 +21,20 @@ export default function Home() {
       if (res) {
         setIsSignedIn(true);
         setUserId(getFromStorage("Coding-Buddy_userId"));
+        let userData = await fetchUserData(userId);
+        console.log(userData);
+        setMainUser('wolf');
         setIsLoading(false);
       } else {
         setIsLoading(false);
-        setReDirectSignIn('/authenticate/signin');
+        setReDirectSignIn("/authenticate/signin");
         setReDirectSignInBool(true);
       }
     } else {
       setIsLoading(false);
       console.log("No Such Token Exist");
       setReDirectSignInBool(true);
-      setReDirectSignIn('/authenticate/signin');
+      setReDirectSignIn("/authenticate/signin");
     }
   };
 
@@ -37,12 +42,9 @@ export default function Home() {
     init();
   }, []);
 
-  if(redirectSignInBool)
-  {
-    console.log('thala');
-    return  <Redirect to={redirectSignIn} />;
-  }
-  else if (isLoading) {
+  if (redirectSignInBool) {
+    return <Redirect to={redirectSignIn} />;
+  } else if (isLoading) {
     return (
       <div>
         <br></br>
@@ -75,20 +77,9 @@ export default function Home() {
         </div>
       </div>
     );
-  } else {
-    return <div>
-      <div className="row"> 
-        <div className="col s3">
-          <div className="newcontainer blue">
-          <GroupList userId = {userId}/>
-          </div>
-        </div>
-        <div className="col s9">
-          <div className="newcontainer red">
-            
-          </div>
-        </div>
-      </div>
-    </div>;
+  } else 
+  {
+    return <div>Wolf</div>
   }
+   
 }

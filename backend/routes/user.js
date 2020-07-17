@@ -25,9 +25,9 @@ module.exports = (app) => {
     });
   });
 
-  app.get("/api/user/details", (res, req) => {
-    let userid = req.query.userid;
-    console.log(userid);
+  app.get("/api/user/details", (req, res) => {
+    let { query } = req;
+    let { userid } = query;
     user.findById(userid, (err, data) => {
       if (err) {
         res.send({ status: false });
